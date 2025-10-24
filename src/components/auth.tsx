@@ -3,8 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { saveSecretKey, getSecretKey, saveExpirationTime } from "@/lib/user-data";
+import {
+  saveSecretKey,
+  getSecretKey,
+  saveExpirationTime,
+} from "@/lib/user-data";
 import { invoke } from "@tauri-apps/api/core";
+import { useNavigate } from "react-router";
 
 interface LoginFormProps {
   onLoginSuccess?: (secretKey: string) => void;
@@ -13,6 +18,7 @@ interface LoginFormProps {
 export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   const [cardKey, setCardKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // 在组件顶层调用 hook
 
   // 组件加载时直接加载已保存的密钥（不检查过期）
   useEffect(() => {
@@ -42,26 +48,32 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
     try {
       // 调用后端登录验证，返回 [success, expirationTimestamp]
-      const [success, expirationTimestamp] = await invoke<[boolean, number]>("login", { password: cardKey });
+      const [success, expirationTimestamp] = await invoke<[boolean, number]>(
+        "login",
+        { password: cardKey }
+      );
 
       if (success) {
         // 登录成功后保存密钥和过期时间
         await saveSecretKey(cardKey);
         await saveExpirationTime(expirationTimestamp);
 
-        // 启动会话监控任务，每10秒向后端验证一次
         await invoke("start_session_monitor", { password: cardKey });
 
         if (onLoginSuccess) {
           onLoginSuccess(cardKey);
         }
+
+        // 跳转到首页
+        navigate("/home");
       }
     } catch (error) {
       console.error("登录失败:", error);
-      const errorMessage = typeof error === "string" 
-        ? error 
-        : error instanceof Error 
-          ? error.message 
+      const errorMessage =
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+          ? error.message
           : "未知错误";
       alert(`登录失败: ${errorMessage}`);
     } finally {

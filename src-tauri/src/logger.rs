@@ -1,39 +1,38 @@
-use colored::*;
+use colored::Colorize;
 
-#[derive(Debug)]
+/// 日志类型
+#[derive(Debug, Clone, Copy)]
 #[allow(dead_code)]
 pub enum LogType {
-    SUCCESS,
-    FAILURE,
-    WARNING,
+    Success,
+    Failure,
+    Warning,
 }
-#[allow(dead_code)]
+
 impl LogType {
-    fn as_str(&self) -> &str {
+    /// 获取日志类型字符串
+    #[allow(dead_code)]
+    const fn as_str(self) -> &'static str {
         match self {
-            LogType::SUCCESS => "SUCCESS",
-            LogType::FAILURE => "FAILURE",
-            LogType::WARNING => "WARNING",
+            Self::Success => "SUCCESS",
+            Self::Failure => "FAILURE",
+            Self::Warning => "WARNING",
         }
     }
 
-    fn colored_output(&self) -> ColoredString {
+    /// 获取带颜色的日志类型字符串
+    #[allow(dead_code)]
+    fn colored(self) -> colored::ColoredString {
         match self {
-            LogType::SUCCESS => self.as_str().green(),
-            LogType::FAILURE => self.as_str().red(),
-            LogType::WARNING => self.as_str().yellow(),
+            Self::Success => self.as_str().green(),
+            Self::Failure => self.as_str().red(),
+            Self::Warning => self.as_str().yellow(),
         }
     }
 }
+
 #[allow(dead_code)]
 pub fn console_log(log_type: LogType, message: &str) {
-    let now = chrono::Local::now();
-    let timestamp = now.format("%Y-%m-%d %H:%M:%S");
-
-    println!(
-        "[{}] [{}] {}",
-        timestamp,
-        log_type.colored_output(),
-        message
-    );
+    let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S");
+    println!("[{}] [{}] {}", timestamp, log_type.colored(), message);
 }
