@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "app": {
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "additionalBrowserArgs": "--enable-unsafe-webgpu",
+        "center": true,
+        "decorations": false,
+        "fullscreen": false,
+        "height": 700,
+        "resizable": false,
+        "transparent": true,
+        "width": 1200
+      }
+    ]
+  },
+  "build": {
+    "beforeBuildCommand": "pnpm build",
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "bundle": {
+    "active": false,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "targets": "all"
+  },
+  "identifier": "com.social.client",
+  "plugins": {
+    "webview": {
+      "windowsWebviewHardwareAcceleration": true
+    }
+  },
+  "productName": "CLIENT",
+  "version": "0.0.1"
+}

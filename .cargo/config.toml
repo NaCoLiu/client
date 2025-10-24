@@ -1,0 +1,13 @@
+[build]
+# 启用增量编译以加快构建速度
+incremental = true
+
+[target.'cfg(windows)']
+# Windows 特定的优化配置
+rustflags = [
+    "-C", "target-cpu=native",  # 针对当前CPU优化
+]
+
+[env]
+# 启用 WebView2 硬件加速
+WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = "--enable-features=msWebView2EnableHardwareAcceleration --disable-features=msWebView2DisableHardwareAcceleration"
