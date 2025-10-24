@@ -139,7 +139,7 @@ pub fn check_expiration(
         console_log(LogType::Failure, "会话已过期");
         Err("会话已过期，请重新登录".to_string())
     } else {
-        // console_log(LogType::Success, "时间戳验证通过");
+        console_log(LogType::Success, "时间戳验证通过");
         Ok(expiration_timestamp)
     }
 }

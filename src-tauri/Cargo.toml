@@ -53,8 +53,8 @@ crate-type = [
 name = "client_lib"
 
 [package]
-authors = ["CLIENT Team"]
-description = "CLIENT Application"
+authors = ["client"]
+description = "client Application"
 edition = "2021"
-name = "Client"
+name = "client"
 version = "0.0.1"

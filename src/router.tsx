@@ -1,12 +1,13 @@
-import { createHashRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { LoginForm } from "./pages/login";
 import Home from "./pages/home/home";
 import { WindowsFrame } from "./Windows";
-import { LauncherPage } from "./pages/home/launcher";
+import { ProtectedRoute } from "./components/protected-route";
+
 import { SettingsPage } from "./pages/home/settings";
 
 import type { ExtendedRouteObject } from "./types/router";
-import { Play, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 
 const routes: ExtendedRouteObject[] = [
   {
@@ -19,18 +20,15 @@ const routes: ExtendedRouteObject[] = [
   },
   {
     path: "/home",
-    element: <Home />,
-
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
     children: [
       {
-        path: "",
-        element: <Navigate to="launcher" replace />,
-      },
-
-      {
-        path: "launcher",
-        element: <LauncherPage />,
-        icon: <Play />,
+        index: true,
+        element: <Navigate to="/home/settings" replace />,
       },
       {
         path: "settings",
@@ -41,11 +39,15 @@ const routes: ExtendedRouteObject[] = [
   },
   {
     path: "/windows",
-    element: <WindowsFrame />,
+    element: (
+      <ProtectedRoute>
+        <WindowsFrame />
+      </ProtectedRoute>
+    ),
   },
 ];
 
-export const router = createHashRouter(routes);
+export const router = createBrowserRouter(routes);
 
 // 导出路由配置以便其他组件访问icon等自定义字段
 export { routes };

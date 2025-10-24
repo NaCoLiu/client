@@ -14,10 +14,8 @@ export default function Home() {
     (route) => route.path === "/home"
   ) as ExtendedRouteObject;
   const childRoutes = (homeRoute?.children?.filter(
-    (child) => child.path !== ""
+    (child) => !child.index && child.path
   ) || []) as ExtendedRouteObject[];
-
- 
 
   const renderIcon = (icon: ExtendedRouteObject["icon"]) => {
     return cloneElement(icon as any, { className: "w-5 h-5" });
@@ -29,12 +27,12 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full h-full flex justify-center items-center flex-col">
-      <WindowsControl fixed />
+    <div className="bg-[#202020] w-full h-full flex justify-center items-center flex-col select-none text-xs">
+      <WindowsControl />
       <div className="flex-1 w-full h-full">
         <Outlet />
       </div>
-      <div className=" bg-gray-400/15 border-t w-full justify-center items-center flex">
+      <div className=" bg-[#161616] border-t w-full justify-center items-center flex">
         {childRoutes.map((route) => (
           <div
             key={route.path}

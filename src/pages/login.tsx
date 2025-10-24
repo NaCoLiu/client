@@ -13,11 +13,13 @@ import { useNavigate } from "react-router";
 import { DialogUtils } from "@/lib/dialog-utils";
 import { DoorClosedLocked, Globe } from "lucide-react";
 import { WindowsControl } from "@/components/windows-control";
+import { useLoginState } from "@/hooks/use-login-state";
 
 export function LoginForm() {
   const [cardKey, setCardKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); // 在组件顶层调用 hook
+  const { fetchLoginStatus } = useLoginState(); // 获取登录状态管理方法
 
   // 组件加载时直接加载已保存的密钥（不检查过期）
   useEffect(() => {
@@ -55,7 +57,10 @@ export function LoginForm() {
       await saveSecretKey(cardKey);
       await saveExpirationTime(expirationTimestamp);
 
-      await invoke("start_session_monitor", { password: cardKey });
+      // 登录函数已经自动启动了会话监控，不需要手动调用
+
+      // 刷新登录状态，确保 React 端状态同步
+      await fetchLoginStatus();
 
       navigate("/home");
     } catch (error) {
