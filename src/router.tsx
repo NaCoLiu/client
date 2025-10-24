@@ -1,6 +1,7 @@
 import { createHashRouter, Navigate } from "react-router";
 import Login from "./Login";
 import Home from "./Home";
+import { WindowsFrame } from "./Windows";
 
 export const router = createHashRouter([
   {
@@ -15,4 +16,8 @@ export const router = createHashRouter([
     path: "/home",
     element: <Home />,
   },
+  {
+    path: "/windows",
+    element: <WindowsFrame />,
+  }
 ]);

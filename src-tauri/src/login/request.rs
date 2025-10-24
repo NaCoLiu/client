@@ -53,6 +53,8 @@ pub async fn request_connection_server() -> bool {
         Ok(_) => true,
         Err(_) => {
             console_log(LogType::Failure, "服务器连接失败");
+           
+            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
             #[cfg(not(debug_assertions))]
             std::process::exit(1);
 

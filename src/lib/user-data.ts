@@ -10,14 +10,14 @@ export interface UserData {
  * 读取 YAML 数据
  */
 export async function loadUserData(): Promise<UserData> {
-  return await invoke<UserData>('load_user_data');
+  return await invoke<UserData>('load_data');
 }
 
 /**
  * 保存数据到 YAML
  */
 export async function saveUserData(data: UserData): Promise<void> {
-  await invoke('save_user_data', { data });
+  await invoke('save_data', { data });
 }
 
 /**

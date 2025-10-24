@@ -40,6 +40,6 @@
       "windowsWebviewHardwareAcceleration": true
     }
   },
-  "productName": "CLIENT",
+  "productName": "Client",
   "version": "0.0.1"
 }

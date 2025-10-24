@@ -18,7 +18,7 @@ fn get_data_path() -> Result<PathBuf, String> {
         exe_dir.to_path_buf()
     };
 
-    Ok(app_dir.join("user_data.yml"))
+    Ok(app_dir.join("data.yml"))
 }
 
 /// 查找项目根目录（包含 src-tauri 的目录）

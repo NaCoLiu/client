@@ -4,7 +4,7 @@ pub mod config;
 pub mod http;
 pub mod logger;
 pub mod login;
-pub mod user_data;
+pub mod data;
 
 use serde_json::{json, Value as JsonValue};
 use std::time::Duration;
@@ -15,14 +15,14 @@ use crate::login::request::login_request;
 
 // Tauri 命令：读取 YAML 数据
 #[tauri::command]
-fn load_user_data() -> Result<JsonValue, String> {
-    user_data::load_yaml()
+fn load_data() -> Result<JsonValue, String> {
+    data::load_yaml()
 }
 
 // Tauri 命令：保存数据到 YAML
 #[tauri::command]
-fn save_user_data(data: JsonValue) -> Result<(), String> {
-    user_data::save_yaml(data)
+fn save_data(data: JsonValue) -> Result<(), String> {
+    data::save_yaml(data)
 }
 
 #[tauri::command]
@@ -39,6 +39,9 @@ fn get_app_info() -> JsonValue {
 async fn login(password: &str) -> Result<(bool, i64), String> {
     login_request(password).await
 }
+
+
+
 
 #[tauri::command]
 fn start_session_monitor(password: String) {
@@ -71,8 +74,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            load_user_data,
-            save_user_data,
+            load_data,
+            save_data,
             get_app_info,
             login,
             start_session_monitor
