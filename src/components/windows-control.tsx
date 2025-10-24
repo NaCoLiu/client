@@ -1,7 +1,12 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { X, Minus } from "lucide-react";
 
-export const WindowsControl = () => {
+export const WindowsControl = ({
+  // 兼容性props 内部菜单页面使用fixed 定位
+  fixed,
+}: {
+  fixed?: boolean;
+}) => {
   const handleMinimize = () => {
     getCurrentWindow().minimize();
   };
@@ -12,7 +17,7 @@ export const WindowsControl = () => {
   return (
     <div
       data-tauri-drag-region
-      className="border-b flex items-center justify-end bg-black/10 backdrop-blur-xl relative"
+      className={`w-full h-8 flex justify-end border-b ${fixed ? "fixed top-0 left-0" : ""}`}
     >
       <div className="flex items-center">
         <button

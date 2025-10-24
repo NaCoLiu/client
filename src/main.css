@@ -5,6 +5,7 @@
 
 @theme inline {
   --font-family-mono: "Maple Mono CN";
+  --default-font-family: var(--font-family-mono);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
