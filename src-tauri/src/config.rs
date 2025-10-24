@@ -9,7 +9,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         Self {
             // 默认后端地址
-            backend_url: "https://jsonplaceholder.typicode.com".to_string(),
+            backend_url: "http://localhost:3000".to_string(),
         }
     }
 }

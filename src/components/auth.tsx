@@ -49,8 +49,8 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
         await saveSecretKey(cardKey);
         await saveExpirationTime(expirationTimestamp);
 
-        // 启动会话监控任务
-        await invoke("start_session_monitor", { expirationTimestamp });
+        // 启动会话监控任务，每10秒向后端验证一次
+        await invoke("start_session_monitor", { password: cardKey });
 
         if (onLoginSuccess) {
           onLoginSuccess(cardKey);

@@ -8,10 +8,9 @@ pub mod user_data;
 
 use serde_json::{json, Value as JsonValue};
 use tauri::Manager;
-use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use crate::login::request::{login_request, check_expiration};
+use crate::login::request::{login_request};
 use crate::logger::{console_log, LogType};
 
 // Tauri 命令：读取 YAML 数据
@@ -41,36 +40,31 @@ async fn login(password: &str) -> Result<(bool, i64), String> {
     login_request(password).await
 }
 
-#[tauri::command]
-fn check_session_expiration(expiration_timestamp: i64) -> Result<i64, String> {
-    check_expiration(expiration_timestamp)
-}
+
 
 #[tauri::command]
-fn start_session_monitor(expiration_timestamp: i64) {
-    console_log(LogType::WARNING, "启动会话监控任务，每10秒检查一次");
-    
-    let shared_timestamp = Arc::new(Mutex::new(expiration_timestamp));
+fn start_session_monitor(password: String) {
+    console_log(LogType::WARNING, "启动会话监控任务，每10秒向后端验证一次");
     
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(Duration::from_secs(10)); // 10秒（测试用）
+        let mut interval = tokio::time::interval(Duration::from_secs(10));
         
         loop {
             interval.tick().await;
             
-            let timestamp = {
-                let lock = shared_timestamp.lock().unwrap();
-                *lock
-            };
+            console_log(LogType::WARNING, "正在向后端验证会话...");
             
-            console_log(LogType::WARNING, "正在检查会话是否过期...");
-            
-            match check_expiration(timestamp) {
-                Ok(_) => {
-                    console_log(LogType::SUCCESS, "会话仍然有效");
+            match login_request(&password).await {
+                Ok((success, _expiration_timestamp)) => {
+                    if success {
+                        console_log(LogType::SUCCESS, "后端验证通过，会话仍然有效");
+                    } else {
+                        console_log(LogType::FAILURE, "后端验证失败，程序将退出");
+                        std::process::exit(1);
+                    }
                 }
-                Err(_) => {
-                    console_log(LogType::FAILURE, "会话已过期，程序将退出");
+                Err(e) => {
+                    console_log(LogType::FAILURE, &format!("后端验证请求失败: {}，程序将退出", e));
                     std::process::exit(1);
                 }
             }
@@ -87,7 +81,6 @@ pub fn run() {
             save_user_data,
             get_app_info,
             login,
-            check_session_expiration,
             start_session_monitor
         ])
         .setup(|app| {
